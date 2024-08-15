@@ -1,82 +1,66 @@
 pipeline {
     agent any
-
-    // Define environment variables
-    environment {
-        TESTING_ENVIRONMENT = "Test"
-        PRODUCTION_ENVIRONMENT = "Saksham Jhamb"
-    }
-
     stages {
         stage('Build') {
             steps {
-                script {
-                    echo "Using Maven for automated builds"
-                    echo "Using a build automation tool to compile and package the code"
-                }
+                echo 'Stage 1: Build - Compiling and packaging the code.'
+                // Tool: Maven
             }
         }
-
         stage('Unit and Integration Tests') {
             steps {
-                script {
-                    echo "Using JUnit for automated unit tests"
-                    echo "Running unit tests"
-                    echo "Using TestNG for integration tests"  
-                    echo "Running integration tests"
-                }
+                echo 'Stage 2: Unit and Integration Tests - Running unit and integration tests.'
+                // Tools: JUnit, TestNG
             }
             post {
-                success {
+                always {
                     emailext(
-                        subject: "Test Stage - Successful",
-                        body: "All the tests passed successfully :) ",
-                        to: "jhamb.saksham2408@gmail.com"
-                    )
-                }
-                failure {
-                    emailext(
-                        subject: "Test Stage - Failed",
-                        body: "TEST FAILED !!! .",
-                        to: "jhamb.saksham2408@gmail.com"
+                        subject: "Jenkins Pipeline: Unit and Integration Tests - ${currentBuild.currentResult}",
+                        body: "The Unit and Integration Tests stage has completed with status: ${currentBuild.currentResult}.",
+                        to: 'youremail@example.com',
+                        attachLog: true
                     )
                 }
             }
         }
-
         stage('Code Analysis') {
             steps {
-                script {
-                    echo "Using SonarQube for code quality checks"
-                    echo "Checking the quality of the code"
-                }
+                echo 'Stage 3: Code Analysis - Analyzing the code for quality and standards.'
+                // Tool: SonarQube
             }
         }
-
         stage('Security Scan') {
             steps {
-                script {
-                    echo "Using AWS CodeDeploy for deployment"
-                    echo "Deploying the application to the testing environment: ${env.TESTING_ENVIRONMENT}"
+                echo 'Stage 4: Security Scan - Scanning the code for vulnerabilities.'
+                // Tool: OWASP Dependency-Check
+            }
+            post {
+                always {
+                    emailext(
+                        subject: "Jenkins Pipeline: Security Scan - ${currentBuild.currentResult}",
+                        body: "The Security Scan stage has completed with status: ${currentBuild.currentResult}.",
+                        to: 'jhamb.saksham2408@gmail.com',
+                        attachLog: true
+                    )
                 }
             }
         }
-
+        stage('Deploy to Staging') {
+            steps {
+                echo 'Stage 5: Deploy to Staging - Deploying the application to a staging server.'
+                // Tool: AWS CLI
+            }
+        }
         stage('Integration Tests on Staging') {
             steps {
-                script {
-                    echo "Waiting for manual approval..."
-                    sleep(time: 10, unit: 'SECONDS')  
-                }
+                echo 'Stage 6: Integration Tests on Staging - Running integration tests on staging.'
+                // Tools: JUnit, TestNG
             }
         }
-
         stage('Deploy to Production') {
             steps {
-                script {
-                    echo "Using Kubernetes for production deployment"
-                    echo "Deploying the code to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
-                }
+                echo 'Stage 7: Deploy to Production - Deploying the application to a production server.'
+                // Tool: AWS CLI
             }
         }
     }
