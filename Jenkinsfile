@@ -17,7 +17,7 @@ pipeline {
                     emailext(
                         subject: "Jenkins Pipeline: Unit and Integration Tests - ${currentBuild.currentResult}",
                         body: "The Unit and Integration Tests stage has completed with status: ${currentBuild.currentResult}.",
-                        to: 'youremail@example.com',
+                        to: 'jhamb.saksham2408@gmail.com',
                         attachLog: true
                     )
                 }
