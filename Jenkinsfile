@@ -28,17 +28,15 @@ pipeline {
             }
             post {
                 success {
-                    emailext(
-                        subject: "Test Stage - Successful",
-                        body: "All the tests passed successfully :) ",
-                        to: "jhamb.saksham2408@gmail.com"
-                    )
-                }
+                    mail to: "jhamb.saksham2408@gmail.com"
+                    subject: "Test Stage - Successful",
+                    body: "All the tests passed successfully :) "
+                )
+            }
                 failure {
-                    emailext(
+                    mail to: "jhamb.saksham2408@gmail.com"
                         subject: "Test Stage - Failed",
-                        body: "TEST FAILED !!! .",
-                        to: "jhamb.saksham2408@gmail.com"
+                        body: "TEST FAILED !!! ."
                     )
                 }
             }
