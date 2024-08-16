@@ -28,17 +28,17 @@ pipeline {
             }
             post {
                 success {
-                    mail(
+                    emailext(
                         to: "jhamb.saksham2408@gmail.com",
-                        subject: "Test Stage - Successful",
-                        body: "All the tests passed successfully :) "
+                        subject: "Jenkins Pipeline: Unit and Integration Tests - Successful",
+                        body: "All the tests passed successfully :)"
                     )
                 }
                 failure {
-                    mail(
+                    emailext(
                         to: "jhamb.saksham2408@gmail.com",
-                        subject: "Test Stage - Failed",
-                        body: "TEST FAILED!!!"
+                        subject: "Jenkins Pipeline: Unit and Integration Tests - Failed",
+                        body: "The Unit and Integration Tests stage failed. Please check the Jenkins logs for more details."
                     )
                 }
             }
@@ -61,11 +61,19 @@ pipeline {
                 }
             }
             post {
-                always {
-                    mail(
+                success {
+                    emailext(
                         to: "jhamb.saksham2408@gmail.com",
-                        subject: "Security Scan Stage - ${currentBuild.currentResult}",
-                        body: "The Security Scan stage has completed with status: ${currentBuild.currentResult}.",
+                        subject: "Jenkins Pipeline: Security Scan - Successful",
+                        body: "The security scan completed successfully.",
+                        attachLog: true
+                    )
+                }
+                failure {
+                    emailext(
+                        to: "jhamb.saksham2408@gmail.com",
+                        subject: "Jenkins Pipeline: Security Scan - Failed",
+                        body: "The security scan failed. Please check the Jenkins logs for more details.",
                         attachLog: true
                     )
                 }
@@ -100,3 +108,4 @@ pipeline {
         }
     }
 }
+
