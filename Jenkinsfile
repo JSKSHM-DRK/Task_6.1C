@@ -28,15 +28,17 @@ pipeline {
             }
             post {
                 success {
-                    mail to: "jhamb.saksham2408@gmail.com"
-                    subject: "Test Stage - Successful",
-                    body: "All the tests passed successfully :) "
-                )
-            }
+                    mail(
+                        to: "jhamb.saksham2408@gmail.com",
+                        subject: "Test Stage - Successful",
+                        body: "All the tests passed successfully :) "
+                    )
+                }
                 failure {
-                    mail to: "jhamb.saksham2408@gmail.com"
+                    mail(
+                        to: "jhamb.saksham2408@gmail.com",
                         subject: "Test Stage - Failed",
-                        body: "TEST FAILED !!! ."
+                        body: "TEST FAILED!!!"
                     )
                 }
             }
@@ -52,6 +54,25 @@ pipeline {
         }
 
         stage('Security Scan') {
+            steps {
+                script {
+                    echo "Using a security scanning tool"
+                    echo "Performing security scan on the application"
+                }
+            }
+            post {
+                always {
+                    mail(
+                        to: "jhamb.saksham2408@gmail.com",
+                        subject: "Security Scan Stage - ${currentBuild.currentResult}",
+                        body: "The Security Scan stage has completed with status: ${currentBuild.currentResult}.",
+                        attachLog: true
+                    )
+                }
+            }
+        }
+
+        stage('Deploy to Staging') {
             steps {
                 script {
                     echo "Using AWS CodeDeploy for deployment"
